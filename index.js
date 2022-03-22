@@ -1,51 +1,23 @@
-var data = {
-	"IsTruncated": false,
-	"Marker": "",
-	"Contents": [
-		{
-			"Key": "Waiting/reecestafford-at-cscope.co.uk/1646133718415/Europe-London/275856 MXL4  [From 01-04-18 to 09-07-18] [09072018145121].cdf",
-			"LastModified": "2022-03-01T11:22:00.000Z",
-			"ETag": "\"4b6c23fa7d6df31165c0b55142a0e697\"",
-			"Size": 1194,
-			"StorageClass": "STANDARD",
-			"Owner": {
-				"ID": "5c33ef4c1258ed508b6eba835c6888e653597a98360226e6499418296a576f4f"
-			}
-		},
-		{
-			"Key": "Waiting/reecestafford-at-cscope.co.uk/1646133718415/Europe-London/275856 MXL4  [From 01-04-18 to 09-07-18] [09072018145121].cdf.lock",
-			"LastModified": "2022-03-01T11:22:00.000Z",
-			"ETag": "\"d41d8cd98f00b204e9800998ecf8427e\"",
-			"Size": 0,
-			"StorageClass": "STANDARD",
-			"Owner": {
-				"ID": "5c33ef4c1258ed508b6eba835c6888e653597a98360226e6499418296a576f4f"
-			}
-		}
-	],
-	"Name": "dev1-cscope.info.cdf.parts",
-	"Prefix": "Waiting/",
-	"MaxKeys": 1000,
-	"CommonPrefixes": []
-}
+var memberTeamArray = [{"Team":"Team 1","User":"lukeburch1234-at-gmail.com","devices":[{"model":"MXL","generation":"4","user":"lukeburch1234-at-gmail.com","owner":"lukeburch1234-at-gmail.com","id":"lukeburch1234-at-gmail.com/lukeburch1234-at-gmail.com/MXL-4-101010","serial":101010},{"model":"MXL","generation":"4","user":"lukeburch1234-at-gmail.com","owner":"lukeburch1234-at-gmail.com","id":"lukeburch1234-at-gmail.com/lukeburch1234-at-gmail.com/MXL-4-222222","serial":222222}]},{"Team":"Team 1","User":"yachtsamba.samba-at-gmail.com","devices":[{"model":"MXL","generation":"4","user":"yachtsamba.samba-at-gmail.com","owner":"yachtsamba.samba-at-gmail.com","id":"yachtsamba.samba-at-gmail.com/yachtsamba.samba-at-gmail.com/MXL-4-275856","serial":275856},{"model":"MXL","generation":"4","user":"yachtsamba.samba-at-gmail.com","owner":"yachtsamba.samba-at-gmail.com","id":"yachtsamba.samba-at-gmail.com/yachtsamba.samba-at-gmail.com/MXL-4-333333","serial":333333}]},{"Team":"Team 2","User":"lukeburch1234-at-icloud.com","devices":[{"model":"MXL","generation":"4","user":"lukeburch1234-at-icloud.com","owner":"lukeburch1234-at-icloud.com","id":"lukeburch1234-at-icloud.com/lukeburch1234-at-icloud.com/MXL-4-444444","serial":444444}]},{"Team":"Team 2","User":"yachtsamba.samba-at-gmail.com","devices":[{"model":"MXL","generation":"4","user":"yachtsamba.samba-at-gmail.com","owner":"yachtsamba.samba-at-gmail.com","id":"yachtsamba.samba-at-gmail.com/yachtsamba.samba-at-gmail.com/MXL-4-275856","serial":275856},{"model":"MXL","generation":"4","user":"yachtsamba.samba-at-gmail.com","owner":"yachtsamba.samba-at-gmail.com","id":"yachtsamba.samba-at-gmail.com/yachtsamba.samba-at-gmail.com/MXL-4-333333","serial":333333}]}]
 
-var contents = data.Contents.sort(function(lhs, rhs) {
-	return lhs.Size - rhs.Size;
-})
+var teamObj = {};
 
-// console.log(contents)
-
-for (var loadFileIndex in contents) {
-	var thisLoadFileKey = contents[loadFileIndex].Key;
-	for (var lockFileIndex in contents) {
-		var thisLockFileKey = contents[lockFileIndex].Key;
-		if (!thisLoadFileKey.includes(".lock") && thisLoadFileKey + ".lock" === thisLockFileKey) {
-			contents.splice(loadFileIndex, 1); // remove this item, it is locked
-			contents.splice(lockFileIndex, 1); // remove the lock for this item, it has been checked
-			break;
-		}
+for (teamIndex in memberTeamArray) {
+	if (!(memberTeamArray[teamIndex].Team  in teamObj)) {
+		// console.log("Not in")
+		teamObj[memberTeamArray[teamIndex].Team] = {};
+		teamObj[memberTeamArray[teamIndex].Team].devices = [];
+		teamObj[memberTeamArray[teamIndex].Team].members = [];
 	}
+	teamObj[memberTeamArray[teamIndex].Team].devices = teamObj[memberTeamArray[teamIndex].Team].devices.concat(memberTeamArray[teamIndex].devices)
+	teamObj[memberTeamArray[teamIndex].Team].members.push(memberTeamArray[teamIndex].User)
+ }
+
+console.log(JSON.stringify(teamObj))
+
+for (team in teamObj) {
+	var teamOption = {};
+	teamOption.name = team;
+	teamOption.devices = teamObj[team].devices;
+	
 }
-
-console.log(contents)
-
